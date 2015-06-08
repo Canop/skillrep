@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	//"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -27,61 +26,77 @@ type Response struct {
 	Type           string `json:"type"`
 }
 
-type Question struct {
-	Id int64 `json:"question_id"`
-	Title string `json:"title"`
-	Tags []string `json:"tags"`
-	CreationDate int64 `json:"creation_date"`
-	Owner ShallowUser `json:"owner"`
-}
-
-type QuestionResponse struct {
+type QuestionsResponse struct {
 	Response
 	Items []Question `json:"items"`
 }
 
+type Question struct {
+	Id           int64       `json:"question_id"`
+	Title        string      `json:"title"`
+	Tags         []string    `json:"tags"`
+	CreationDate int64       `json:"creation_date"`
+	Owner        ShallowUser `json:"owner"`
+	Answers      []Answer    `json:"answers"`
+}
+
 type Answer struct {
-	Id int64 `json:"answer_id"`
-	CreationDate int64 `json:"creation_date"`
-	IsAccepted bool `json:"is_accepted"`
-	Owner ShallowUser `json:"owner"`
-	Question Id int `json:"question_id"`
-	Score int `json:"score"`
+	Id           int64       `json:"answer_id"`
+	CreationDate int64       `json:"creation_date"`
+	IsAccepted   bool        `json:"is_accepted"`
+	Owner        ShallowUser `json:"owner"`
+	QuestionId   int         `json:"question_id"`
+	Score        int         `json:"score"`
 }
 
 type ShallowUser struct {
-	Id int64 `json:"user_id"`
+	Id   int64  `json:"user_id"`
 	Name string `json:"display_name"`
 }
 
-func getQuestion(site string, id int) (*QuestionResponse, error) {
-	filter := "!L_Zm1rmoFy)u)LqgLTvHLi"
-	rtype := "questions"
+func GetQuestion(site string, id int) (*QuestionsResponse, error) {
+	// filter := "!L_Zm1rmoFy)u)LqgLTvHLi"
+	filter := "!OfYUQYtgCaZ9JBeJyrvLd85AXer(WSNHQacu))0iZzl"
 	httpClient := new(http.Client)
-	url := fmt.Sprintf("%s/%s/%d?site=%s&filter=%s", apiurl, rtype, id, site, filter)
+	url := fmt.Sprintf("%s/%s/%d?site=%s&filter=%s", apiurl, "questions", id, site, filter)
 	log.Println("URL: " + url)
 	resp, err := httpClient.Get(url)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	var r QuestionResponse
+	var r QuestionsResponse
 	decoder := json.NewDecoder(bufio.NewReader(resp.Body))
 	err = decoder.Decode(&r)
-	//bytes, err := ioutil.ReadAll(resp.Body)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//log.Println(string(bytes))
-	//err = json.Unmarshal(bytes, &r)
-	//if err != nil {
-	//	return nil, err
-	//}
 	return &r, err
 }
 
+func GetQuestions(site string, fromDate, toDate int64, page int) (*QuestionsResponse, error) {
+	filter := "!OfYUQYtgCaZ9JBeJyrvLd85AXer(WSNHQacu))0iZzl"
+	httpClient := new(http.Client)
+	url := fmt.Sprintf("%s/%s?site=%s&filter=%s", apiurl, "questions", site, filter)
+	if page > 0 {
+		url += fmt.Sprintf("&page=%d", page)
+	}
+	if fromDate > 0 {
+		url += fmt.Sprintf("&fromdate=", fromDate)
+	}
+	if toDate > 0 {
+		url += fmt.Sprintf("&todate=", toDate)
+	}
+	log.Println("URL: " + url)
+	resp, err := httpClient.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	var r QuestionsResponse
+	decoder := json.NewDecoder(bufio.NewReader(resp.Body))
+	err = decoder.Decode(&r)
+	return &r, err
+}
 func main() {
-	r, err := getQuestion("stackoverflow", 11353679)
+	r, err := GetQuestion("stackoverflow", 11353679)
 	if err != nil {
 		log.Fatal(err)
 	}
