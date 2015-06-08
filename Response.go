@@ -28,7 +28,11 @@ type Response struct {
 }
 
 type Question struct {
+	Id int64 `json:"question_id"`
+	Title string `json:"title"`
 	Tags []string `json:"tags"`
+	CreationDate int64 `json:"creation_date"`
+	Owner ShallowUser `json:"owner"`
 }
 
 type QuestionResponse struct {
@@ -37,7 +41,7 @@ type QuestionResponse struct {
 }
 
 type Answer struct {
-	Id int `json:"answer_id"`
+	Id int64 `json:"answer_id"`
 	CreationDate int64 `json:"creation_date"`
 	IsAccepted bool `json:"is_accepted"`
 	Owner ShallowUser `json:"owner"`
@@ -46,7 +50,7 @@ type Answer struct {
 }
 
 type ShallowUser struct {
-	Id int `json:"user_id"`
+	Id int64 `json:"user_id"`
 	Name string `json:"display_name"`
 }
 
