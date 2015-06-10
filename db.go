@@ -16,13 +16,6 @@ func NewSaver(bufferSize int) *Saver {
 	return s
 }
 
-// die is an acronym for "die if error"
-func die(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 func (s *Saver) Run() {
 	db, err := sql.Open("postgres", config.DB.queryString())
 	die(err)
@@ -33,11 +26,20 @@ func (s *Saver) Run() {
 			return
 		}
 		log.Printf("Saving %s\n", q.Title)
-		var qid int
-		sql := "insert into Question(Id, Title, CreationDate, Owner) values ($1, $2, $3, $4) returning Id"
-		err = db.QueryRow(sql, q.Id, q.Title, q.CreationDate, q.Owner.Id).Scan(&qid)
+		sql := "delete from Answer where question=$1"
+		_, err = db.Exec(sql, q.Id)
 		die(err)
-		log.Printf("Inserted Question Id: %d\n", qid)
+		sql = "delete from Question where id=$1" // waiting for PG's upsert... soon...
+		_, err = db.Exec(sql, q.Id)
+		die(err)
+		sql = "insert into Question(Id, Title, CreationDate, Owner) values ($1, $2, $3, $4)"
+		_, err = db.Exec(sql, q.Id, q.Title, q.CreationDate, q.Owner.Id)
+		die(err)
+		for _, a := range q.Answers {
+			sql = "insert into Answer(Id, Owner, Question, CreationDate, Score) values ($1, $2, $3, $4, $5)"
+			_, err = db.Exec(sql, a.Id, a.Owner.Id, q.Id, a.CreationDate, a.Score)
+			die(err)
+		}
 	}
 }
 
