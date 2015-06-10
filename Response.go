@@ -13,22 +13,22 @@ const apiurl = "http://api.stackexchange.com/2.2"
 // structure of a StackExchange response
 // see https://api.stackexchange.com/docs/wrapper
 type Response struct {
-	Backoff        int    `json:"backoff"`
-	ErrorId        int    `json:"error_id"`
-	ErrorMessage   string `json:"error_message"`
-	ErrorName      string `json:"error_name"`
-	HasMore        bool   `json:"has_more"`
-	Page           int    `json:"page"`
-	PageSize       int    `json:"page_size"`
-	QuotaMax       int    `json:"quota_max"`
-	QuotaRemaining int    `json:"quota_remaining"`
-	Total          int    `json:"total"`
-	Type           string `json:"type"`
+	Backoff         int    `json:"backoff"`
+	ErrorId         int    `json:"error_id"`
+	ErrorMessage    string `json:"error_message"`
+	ErrorName       string `json:"error_name"`
+	HasMore         bool   `json:"has_more"`
+	Page            int    `json:"page"`
+	PageSize        int    `json:"page_size"`
+	QuotaMax        int    `json:"quota_max"`
+	dQuotaRemaining int    `json:"quota_remaining"`
+	Total           int    `json:"total"`
+	Type            string `json:"type"`
 }
 
 type QuestionsResponse struct {
 	Response
-	Items []Question `json:"items"`
+	Questions []*Question `json:"items"`
 }
 
 type Question struct {
@@ -37,7 +37,7 @@ type Question struct {
 	Tags         []string    `json:"tags"`
 	CreationDate int64       `json:"creation_date"`
 	Owner        ShallowUser `json:"owner"`
-	Answers      []Answer    `json:"answers"`
+	Answers      []*Answer   `json:"answers"`
 }
 
 type Answer struct {
@@ -94,11 +94,4 @@ func GetQuestions(site string, fromDate, toDate int64, page int) (*QuestionsResp
 	decoder := json.NewDecoder(bufio.NewReader(resp.Body))
 	err = decoder.Decode(&r)
 	return &r, err
-}
-func main() {
-	r, err := GetQuestion("stackoverflow", 11353679)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("r:%+v\n", r)
 }

@@ -1,0 +1,8 @@
+{
+	"comments":"This file must be renamed in config.json",
+	"db": {
+		"name":"skillrep",
+		"user":"skillrep",
+		"password":"<set your password here>"
+	}
+}
