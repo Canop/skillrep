@@ -12,22 +12,9 @@ func die(err error) {
 	}
 }
 
-// fetches one question
-func fetchOneQuestion(qid int) {
-	saver := NewSaver(50)
-	r, err := GetQuestion("stackoverflow", 11353679)
-	die(err)
-	log.Printf("BACKOFF: %#v\n", r.Backoff)
-	for _, q := range r.Questions {
-		saver.AddQuestion(q)
-	}
-	saver.Done()
-	saver.Run()
-}
-
 func fetchSomeQuestions(startDate, endDate int64, saver *Saver) {
 	fromDate := startDate
-	nbQueriesMax := 100
+	nbQueriesMax := 1000
 	maxCreationDate := fromDate
 	page := 1
 	for nbQueries := 1; nbQueries <= nbQueriesMax; nbQueries++ {
@@ -53,6 +40,7 @@ func fetchSomeQuestions(startDate, endDate int64, saver *Saver) {
 	}
 	saver.Done()
 }
+
 func main() {
 	ReadConfig()
 	log.Printf("Config: %#v\n", config)
