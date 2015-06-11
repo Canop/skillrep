@@ -1,4 +1,4 @@
-package main
+package core
 
 import (
 	"log"
@@ -41,7 +41,7 @@ func fetchSomeQuestions(startDate, endDate int64, saver *Saver) {
 	saver.Done()
 }
 
-func main() {
+func Update() {
 	ReadConfig()
 	log.Printf("Config: %#v\n", config)
 	if config.DB.Name == "" {
@@ -52,5 +52,4 @@ func main() {
 	endDate := int64(time.Now().Add(-3 * 24 * time.Hour).Unix())
 	go fetchSomeQuestions(saver.MostRecentQuestionDate(), endDate, saver)
 	saver.Run()
-
 }

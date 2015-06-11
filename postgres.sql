@@ -13,4 +13,8 @@ create table Answer (
 );
 create index answer_question on Answer(Question);
 create index answer_owner on Answer(Owner);
+create table Player (
+	Id integer primary key,
+	Name text
+);
 
