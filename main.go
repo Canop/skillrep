@@ -28,19 +28,27 @@ func fetchOneQuestion(qid int) {
 func fetchSomeQuestions(startDate, endDate int64, saver *Saver) {
 	fromDate := startDate
 	nbQueriesMax := 100
-	for nbQueries := 0; nbQueries < nbQueriesMax; nbQueries++ {
-		log.Printf("Query %d / %d \n", nbQueries, nbQueriesMax)
-		r, err := GetQuestions("stackoverflow", fromDate, endDate, 0)
+	maxCreationDate := fromDate
+	page := 1
+	for nbQueries := 1; nbQueries <= nbQueriesMax; nbQueries++ {
+		log.Printf("Query %d / %d - page=%d \n", nbQueries, nbQueriesMax, page)
+		r, err := GetQuestions("stackoverflow", fromDate, endDate, page)
 		die(err)
 		for _, q := range r.Questions {
 			saver.AddQuestion(q)
 			if q.CreationDate > fromDate {
-				fromDate = q.CreationDate
+				maxCreationDate = q.CreationDate
 			}
+		}
+		if r.HasMore {
+			page++
+		} else {
+			page = 1
+			fromDate = maxCreationDate
 		}
 		if r.Backoff > 0 {
 			log.Printf("BACKOFF: %d\n", r.Backoff)
-			time.Sleep(time.Duration(r.Backoff) * time.Second)
+			time.Sleep(time.Duration(r.Backoff+2) * time.Second)
 		}
 	}
 	saver.Done()

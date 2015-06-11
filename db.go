@@ -26,7 +26,7 @@ func (s *Saver) Run() {
 		if !more {
 			return
 		}
-		log.Printf("->Q:\"%.50s\"\n", q.Title)
+		log.Printf("->Q:\"%.60s\"\n", q.Title)
 		sql := "delete from Answer where question=$1"
 		_, err := s.db.Exec(sql, q.Id)
 		die(err)
