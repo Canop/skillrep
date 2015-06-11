@@ -74,15 +74,15 @@ func GetQuestion(site string, id int) (*QuestionsResponse, error) {
 func GetQuestions(site string, fromDate, toDate int64, page int) (*QuestionsResponse, error) {
 	filter := "!OfYUQYtgCaZ9JBeJyrvLd85AXer(WSNHQacu))0iZzl"
 	httpClient := new(http.Client)
-	url := fmt.Sprintf("%s/%s?site=%s&filter=%s", apiurl, "questions", site, filter)
+	url := fmt.Sprintf("%s/%s?site=%s&filter=%s&sort=creation&order=asc&key=%s", apiurl, "questions", site, filter, config.ApiKey)
 	if page > 0 {
 		url += fmt.Sprintf("&page=%d", page)
 	}
 	if fromDate > 0 {
-		url += fmt.Sprintf("&fromdate=", fromDate)
+		url += fmt.Sprintf("&fromdate=%d", fromDate)
 	}
 	if toDate > 0 {
-		url += fmt.Sprintf("&todate=", toDate)
+		url += fmt.Sprintf("&todate=%d", toDate)
 	}
 	log.Println("URL: " + url)
 	resp, err := httpClient.Get(url)
@@ -93,5 +93,11 @@ func GetQuestions(site string, fromDate, toDate int64, page int) (*QuestionsResp
 	var r QuestionsResponse
 	decoder := json.NewDecoder(bufio.NewReader(resp.Body))
 	err = decoder.Decode(&r)
+	if r.ErrorName != "" {
+		log.Printf("ErrorName: %s\n", r.ErrorName)
+	}
+	if r.ErrorMessage != "" {
+		log.Printf("ErrorMessage: %s\n", r.ErrorMessage)
+	}
 	return &r, err
 }

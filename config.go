@@ -14,7 +14,8 @@ type DbConfig struct {
 }
 
 type Config struct {
-	DB DbConfig
+	DB     DbConfig
+	ApiKey string
 }
 
 var config Config
