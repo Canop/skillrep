@@ -93,11 +93,11 @@ func GetQuestions(site string, fromDate, toDate int64, page int) (*QuestionsResp
 	var r QuestionsResponse
 	decoder := json.NewDecoder(bufio.NewReader(resp.Body))
 	err = decoder.Decode(&r)
-	if r.ErrorName != "" {
-		log.Printf("ErrorName: %s\n", r.ErrorName)
-	}
 	if r.ErrorMessage != "" {
 		log.Printf("ErrorMessage: %s\n", r.ErrorMessage)
+	}
+	if r.ErrorName != "" {
+		log.Fatal("ErrorName: %s\n", r.ErrorName)
 	}
 	return &r, err
 }
