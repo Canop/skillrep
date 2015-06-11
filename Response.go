@@ -13,17 +13,17 @@ const apiurl = "http://api.stackexchange.com/2.2"
 // structure of a StackExchange response
 // see https://api.stackexchange.com/docs/wrapper
 type Response struct {
-	Backoff         int    `json:"backoff"`
-	ErrorId         int    `json:"error_id"`
-	ErrorMessage    string `json:"error_message"`
-	ErrorName       string `json:"error_name"`
-	HasMore         bool   `json:"has_more"`
-	Page            int    `json:"page"`
-	PageSize        int    `json:"page_size"`
-	QuotaMax        int    `json:"quota_max"`
-	dQuotaRemaining int    `json:"quota_remaining"`
-	Total           int    `json:"total"`
-	Type            string `json:"type"`
+	Backoff        int    `json:"backoff"`
+	ErrorId        int    `json:"error_id"`
+	ErrorMessage   string `json:"error_message"`
+	ErrorName      string `json:"error_name"`
+	HasMore        bool   `json:"has_more"`
+	Page           int    `json:"page"`
+	PageSize       int    `json:"page_size"`
+	QuotaMax       int    `json:"quota_max"`
+	QuotaRemaining int    `json:"quota_remaining"`
+	Total          int    `json:"total"`
+	Type           string `json:"type"`
 }
 
 type QuestionsResponse struct {
@@ -55,7 +55,6 @@ type ShallowUser struct {
 }
 
 func GetQuestion(site string, id int) (*QuestionsResponse, error) {
-	// filter := "!L_Zm1rmoFy)u)LqgLTvHLi"
 	filter := "!OfYUQYtgCaZ9JBeJyrvLd85AXer(WSNHQacu))0iZzl"
 	httpClient := new(http.Client)
 	url := fmt.Sprintf("%s/%s/%d?site=%s&filter=%s", apiurl, "questions", id, site, filter)
