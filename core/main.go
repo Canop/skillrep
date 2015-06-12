@@ -14,7 +14,7 @@ func die(err error) {
 
 func fetchSomeQuestions(startDate, endDate int64, saver *Saver) {
 	fromDate := startDate
-	nbQueriesMax := 1000
+	nbQueriesMax := 10000
 	maxCreationDate := fromDate
 	page := 1
 	for nbQueries := 1; nbQueries <= nbQueriesMax; nbQueries++ {
