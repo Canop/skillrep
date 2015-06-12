@@ -2,7 +2,8 @@ create table Question (
 	Id integer primary key,
 	Title text not null,
 	CreationDate integer not null,
-	Owner integer not null
+	Owner integer not null,
+	Tags text
 );
 create table Answer (
 	Id integer primary key,

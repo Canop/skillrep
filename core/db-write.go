@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	_ "github.com/lib/pq"
 	"log"
+	"strings"
 )
 
 type Saver struct {
@@ -33,8 +34,8 @@ func (s *Saver) Run() {
 		sql = "delete from Question where id=$1" // waiting for PG's upsert... soon...
 		_, err = s.db.Exec(sql, q.Id)
 		die(err)
-		sql = "insert into Question(Id, Title, CreationDate, Owner) values ($1, $2, $3, $4)"
-		_, err = s.db.Exec(sql, q.Id, q.Title, q.CreationDate, q.Owner.Id)
+		sql = "insert into Question(Id, Title, CreationDate, Owner, Tags) values ($1, $2, $3, $4, $5)"
+		_, err = s.db.Exec(sql, q.Id, q.Title, q.CreationDate, q.Owner.Id, strings.Join(q.Tags, " "))
 		die(err)
 		for _, a := range q.Answers {
 			if a.Owner.Id != 0 {
