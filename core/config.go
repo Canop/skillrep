@@ -16,9 +16,14 @@ type DbConfig struct {
 type Config struct {
 	DB     DbConfig
 	ApiKey string
+	Port   int
 }
 
 var config Config
+
+func GetConfig() *Config {
+	return &config
+}
 
 func (dbc DbConfig) queryString() string {
 	return fmt.Sprintf("user=%s dbname=%s password=%s", dbc.User, dbc.Name, dbc.Password)
