@@ -18,8 +18,7 @@ func handleJsonQuery(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	core.ReadConfig()
 	http.Handle("/", http.FileServer(http.Dir("static")))
 	http.HandleFunc("/users", handleJsonQuery)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", core.GetConfig().Port), nil))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", core.Config().Port), nil))
 }

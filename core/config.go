@@ -7,33 +7,32 @@ import (
 	"os"
 )
 
+type GlobalConfig struct {
+	DB     DbConfig
+	ApiKey string
+	Port   int
+}
+
 type DbConfig struct {
 	Name     string
 	User     string
 	Password string
 }
 
-type Config struct {
-	DB     DbConfig
-	ApiKey string
-	Port   int
-}
+var config GlobalConfig
 
-var config Config
-
-func GetConfig() *Config {
+func Config() *GlobalConfig {
+	if config.DB.Name == "" {
+		file, _ := os.Open("config.json")
+		decoder := json.NewDecoder(file)
+		err := decoder.Decode(&config)
+		if err != nil {
+			log.Fatal("Error while reading config: ", err)
+		}
+	}
 	return &config
 }
 
 func (dbc DbConfig) queryString() string {
 	return fmt.Sprintf("user=%s dbname=%s password=%s", dbc.User, dbc.Name, dbc.Password)
-}
-
-func ReadConfig() {
-	file, _ := os.Open("config.json")
-	decoder := json.NewDecoder(file)
-	err := decoder.Decode(&config)
-	if err != nil {
-		log.Fatal("Error while reading config: ", err)
-	}
 }

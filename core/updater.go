@@ -5,13 +5,6 @@ import (
 	"time"
 )
 
-// die is an acronym for "die if error"
-func die(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 func fetchSomeQuestions(startDate, endDate int64, saver *Saver) {
 	fromDate := startDate
 	nbQueriesMax := 10000
@@ -42,12 +35,10 @@ func fetchSomeQuestions(startDate, endDate int64, saver *Saver) {
 }
 
 func Update() {
-	ReadConfig()
 	log.Printf("Config: %#v\n", config)
 	if config.DB.Name == "" {
 		log.Fatal("bad config")
 	}
-
 	saver := NewSaver(500)
 	endDate := int64(time.Now().Add(-3 * 24 * time.Hour).Unix())
 	go fetchSomeQuestions(saver.MostRecentQuestionDate(), endDate, saver)
