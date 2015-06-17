@@ -12,14 +12,15 @@ h1 {
 section {
 	width: 700px;
 	margin: auto;
+	margin-top: 10px;
 }
 section a {
 	text-decoration: none;
-	color: #bbb;
-	font-size: 85%;
+	color: #bbd;
+	cursor: pointer;
 }
 section a:hover {
-	color: #ddd;
+	color: #ddf;
 }
 section > a + a::before {
 	content:"-";
@@ -39,14 +40,25 @@ table {
 	border-collapse: collapse;
 	width: 100%;
 }
-th, td {
+th {
 	border: 1px solid #333;
-	padding: 3px;
+	padding: 4px;
 	text-align: center;
+}
+td {
+	border: 1px solid #333;
+	padding: 0 3px;
+	text-align: center;
+}
+td:nth-child(3) {
+	text-align: left;
 }
 tr:nth-child(even), th {
 	background: rgba(120,120,120,.07);
 }
 .invalid {
 	color: #c00;
+}
+#about {
+	display:none;
 }

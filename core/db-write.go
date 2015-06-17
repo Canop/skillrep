@@ -30,8 +30,8 @@ func (s *Saver) Run() {
 		sql = "delete from Question where id=$1" // waiting for PG's upsert... soon...
 		_, err = tx.Exec(sql, q.Id)
 		die(err)
-		sql = "insert into Question(Id, Title, CreationDate, Owner, Tags) values ($1, $2, $3, $4, $5)"
-		_, err = tx.Exec(sql, q.Id, q.Title, q.CreationDate, q.Owner.Id, strings.Join(q.Tags, " "))
+		sql = "insert into Question(Id, Title, CreationDate, ClosedDate, Owner, Tags) values ($1,$2,$3,$4,$5,$6)"
+		_, err = tx.Exec(sql, q.Id, q.Title, q.CreationDate, q.ClosedDate, q.Owner.Id, strings.Join(q.Tags, " "))
 		die(err)
 		for _, a := range q.Answers {
 			if a.Owner.Id != 0 {
@@ -40,15 +40,15 @@ func (s *Saver) Run() {
 				die(err)
 				n, _ := r.RowsAffected()
 				if n == 0 { // yes, there's no upsert yet
-					sql = "insert into Player(Id, Name) values($1,$2)"
-					_, err = tx.Exec(sql, a.Owner.Id, a.Owner.Name)
+					sql = "insert into Player(Id, Name, Profile) values($1,$2,$3)"
+					_, err = tx.Exec(sql, a.Owner.Id, a.Owner.Name, a.Owner.Profile)
 					die(err)
 					// log.Println("new player: ", a.Owner.Name)
 				} else {
 					// log.Println("Updated player: ", a.Owner.Name)
 				}
 			}
-			sql = "insert into Answer(Id, Owner, Question, CreationDate, Accepted, Score) values ($1, $2, $3, $4, $5, $6)"
+			sql = "insert into Answer(Id, Owner, Question, CreationDate, Accepted, Score) values ($1,$2,$3,$4,$5,$6)"
 			_, err = tx.Exec(sql, a.Id, a.Owner.Id, q.Id, a.CreationDate, a.IsAccepted, a.Score)
 			die(err)
 		}

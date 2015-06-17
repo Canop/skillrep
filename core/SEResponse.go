@@ -37,6 +37,7 @@ type Question struct {
 	Title        string      `json:"title"`
 	Tags         []string    `json:"tags"`
 	CreationDate int64       `json:"creation_date"`
+	ClosedDate   int64       `json:"closed_date"`
 	Owner        ShallowUser `json:"owner"`
 	Answers      []*Answer   `json:"answers"`
 }
@@ -51,8 +52,9 @@ type Answer struct {
 }
 
 type ShallowUser struct {
-	Id   int64  `json:"user_id"`
-	Name string `json:"display_name"`
+	Id      int64  `json:"user_id"`
+	Name    string `json:"display_name"`
+	Profile string `json:"profile_image"`
 }
 
 func GetQuestion(site string, id int) (*QuestionsSEResponse, error) {
@@ -72,7 +74,8 @@ func GetQuestion(site string, id int) (*QuestionsSEResponse, error) {
 }
 
 func GetQuestions(site string, fromDate, toDate int64, page int) (*QuestionsSEResponse, error) {
-	filter := "!OfYUQYtgCaZ9JBeJyrvLd85AXer(WSNHQacu))0iZzl"
+	//filter := "!OfYUQYtgCaZ9JBeJyrvLd85AXer(WSNHQacu))0iZzl"
+	filter := "!OfYUNMJh9fuDMgvKdY4azSGUzEClDUc-_K.I(mDC4F3"
 	httpClient := new(http.Client)
 	url := fmt.Sprintf("%s/%s?site=%s&filter=%s&sort=creation&order=asc&key=%s", apiurl, "questions", site, filter, config.ApiKey)
 	if page > 0 {
@@ -97,7 +100,7 @@ func GetQuestions(site string, fromDate, toDate int64, page int) (*QuestionsSERe
 		log.Printf("ErrorMessage: %s\n", r.ErrorMessage)
 	}
 	if r.ErrorName != "" {
-		log.Fatal("ErrorName: %s\n", r.ErrorName)
+		log.Fatal("ErrorName:", r.ErrorName)
 	}
 	return &r, err
 }

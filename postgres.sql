@@ -2,6 +2,7 @@ create table Question (
 	Id integer primary key,
 	Title text not null,
 	CreationDate integer not null,
+	ClosedDate integer not null,
 	Owner integer not null,
 	Tags text
 );
@@ -17,5 +18,6 @@ create index answer_question on Answer(Question);
 create index answer_owner on Answer(Owner);
 create table Player (
 	Id integer primary key,
-	Name text
+	Name text,
+	Profile text
 );

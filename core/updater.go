@@ -40,7 +40,7 @@ func Update() {
 		log.Fatal("bad config")
 	}
 	saver := NewSaver(500)
-	endDate := int64(time.Now().Add(-3 * 24 * time.Hour).Unix())
+	endDate := int64(time.Now().Add(-7 * 24 * time.Hour).Unix())
 	go fetchSomeQuestions(saver.MostRecentQuestionDate(), endDate, saver)
 	saver.Run()
 }
