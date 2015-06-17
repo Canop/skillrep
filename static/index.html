@@ -2,21 +2,44 @@
 <html>
 <head>
 	<title>SkillRep</title>
+	<link rel="stylesheet" href="skillrep.css">
 </head>
 <body>
-	Coder forgot to put things here.
-<table id=users>
-<thead>
-	<tr>
-		<th>Rank</th>
-		<th>Id</th>
-		<th>Name</th>
-		<th>Skill Rep</th>
-	</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+<h1>SkillRep</h1>
+<section>
+An experiment in computing a skill focused reputation from StackOverflow data
+</section>
+<section>
+	<div class=tbl-controls>
+		<input placeholder="user's id or name" id=search>
+		<button class=tbl-first>⇤</button>
+		<button class=tbl-prev>←</button>
+		<button class=tbl-next>→</button>
+	</div>
+	<table id=users>
+	<thead>
+		<tr>
+			<th>Rank</th>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Capped Upvotes</th>
+			<th>Accepts</th>
+			<th>Score</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+	</table>
+	<div class=tbl-controls>
+		<button class=tbl-first>⇤</button>
+		<button class=tbl-prev>←</button>
+		<button class=tbl-next>→</button>
+	</div>
+</section>
+<section>
+	<a href=https://github.com/Canop/skillrep>GitHub</a>
+	<a href=http://dystroy.org/miaou/8>Discussions</a>
+</section>
 <script src="skillrep.js"></script>
 </body>
 </html>

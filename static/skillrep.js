@@ -21,8 +21,11 @@
 	}
 	HTMLElement.prototype.append = function(tag,text){
 		var e = document.createElement(tag)
-		if (text) e.textContent = text
+		if (text) e.innerHTML = text
 		return this.appendChild(e)
+	}
+	HTMLElement.prototype.empty = function(tag,text){
+		while(this.firstChild) this.removeChild(this.firstChild)
 	}
 	var $ = document.querySelectorAll.bind(document)
 	NodeList.prototype.__proto__ = Array.prototype
@@ -33,20 +36,50 @@
 		return this
 	}
 
-	function fetchUsersPage(page){
-		fetch('users')
+	var page = 0
+	function fetchUsersPage(){
+		fetch('users',{page:page, search:document.getElementById('search').value})
 		.then(function fillTbl(resp){
 			console.log('received', resp)
+			if (resp.Error) {
+				console.log("error:", resp.Error)
+				return
+			}
 			var tbody = document.querySelector("#users tbody")
+			tbody.empty()
 			resp.Users.forEach(function(u){
 				var tr = tbody.append('tr')
 				tr.append('td', u.Rank)
 				tr.append('td', u.Id)
 				tr.append('td', u.Name)
-				tr.append('td', u.SkillRep)
+				tr.append('td', u.Upvotes)
+				tr.append('td', u.Accepts)
+				tr.append('td', u.Score)
 			})
 		})
 	}
 
-	fetchUsersPage(1)
+	fetchUsersPage()
+	$('.tbl-first').on('click', function(){
+		page = 0
+		fetchUsersPage()
+	})
+	$('.tbl-prev').on('click', function(){
+		page--
+		fetchUsersPage()
+	})
+	$('.tbl-next').on('click', function(){
+		page++
+		fetchUsersPage()
+	})
+	$('#search').on('keyup', function(){
+		this.className = this.className.replace(/\binvalid\b/,'')
+		try {
+			new RegExp(this.value)
+			fetchUsersPage()
+		} catch(e) {
+			this.className += ' invalid'
+		}
+	});
+
 }()

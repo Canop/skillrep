@@ -6,11 +6,14 @@ import (
 	"log"
 	"net/http"
 	"skillrep/core"
+	"strconv"
 )
 
 func handleJsonQuery(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	srq := &core.SRQuery{}
+	srq.Page, _ = strconv.Atoi(r.FormValue("page"))
+	srq.Search = r.FormValue("search")
 	srq.Fix()
 	srr := srq.Answer()
 	m, _ := json.Marshal(srr)

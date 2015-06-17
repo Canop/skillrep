@@ -48,8 +48,8 @@ func (s *Saver) Run() {
 					// log.Println("Updated player: ", a.Owner.Name)
 				}
 			}
-			sql = "insert into Answer(Id, Owner, Question, CreationDate, Score) values ($1, $2, $3, $4, $5)"
-			_, err = tx.Exec(sql, a.Id, a.Owner.Id, q.Id, a.CreationDate, a.Score)
+			sql = "insert into Answer(Id, Owner, Question, CreationDate, Accepted, Score) values ($1, $2, $3, $4, $5, $6)"
+			_, err = tx.Exec(sql, a.Id, a.Owner.Id, q.Id, a.CreationDate, a.IsAccepted, a.Score)
 			die(err)
 		}
 		tx.Commit()

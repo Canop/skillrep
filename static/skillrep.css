@@ -1,0 +1,52 @@
+body {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 14px;
+	background: #222;
+	color: #aaa
+}
+h1 {
+	width: 700px;
+	margin: auto;
+	text-align: left;
+}
+section {
+	width: 700px;
+	margin: auto;
+}
+section a {
+	text-decoration: none;
+	color: #bbb;
+	font-size: 85%;
+}
+section a:hover {
+	color: #ddd;
+}
+section > a + a::before {
+	content:"-";
+	margin: 10px;
+}
+.tbl-controls {
+	text-align: right;
+}
+.tbl-controls button {
+	margin: 5px;
+	opacity: .8;
+	cursor: pointer;
+}
+table {
+	/*background: white;
+	color: #333;*/
+	border-collapse: collapse;
+	width: 100%;
+}
+th, td {
+	border: 1px solid #333;
+	padding: 3px;
+	text-align: center;
+}
+tr:nth-child(even), th {
+	background: rgba(120,120,120,.07);
+}
+.invalid {
+	color: #c00;
+}
