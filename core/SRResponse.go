@@ -16,13 +16,12 @@ type SRResponse struct {
 	DBStats DBStats
 }
 type RankedUser struct {
-	Rank    int
-	Upvotes int
-	Accepts int
-	Score   int
-	Id      int
-	Name    string
-	Profile string
+	Id       int
+	Rank     int
+	Accepts  int
+	SkillRep int
+	Name     string
+	Profile  string
 }
 type DBStats struct {
 	MaxQuestionCreationDate int64
@@ -44,24 +43,20 @@ func (q *SRQuery) Answer() SRResponse {
 	defer db.Close()
 	var r SRResponse
 	r.Users = make([]RankedUser, 0, pageSize)
-	sql := `select g.Owner, g.u, g.a, g.s, player.name, player.profile from
-	 (select answer.owner,
-	  sum(least(10,answer.score)) u,
-	  sum(Accepted::int) a,
-	  10*sum(least(10,answer.score)) + 15*sum(Accepted::int) s
-	  from answer join question on answer.question=question.id 
-	  where Accepted is true and answer.owner!=question.owner
-	  and question.closeddate=0
-	  group by answer.owner
-         ) as g
-	 left join player on player.id=g.owner
-	 where owner!=0`
+	sql := `select 
+		p.id,
+		(select 1 + count(*) from player op where op.skillrep>p.skillrep),
+		(select count(*) from answer where owner=p.id and accepted is true),
+		p.skillrep,
+		p.name,
+		p.profile
+		from player p`
 	args := []interface{}{pageSize, (q.Page * pageSize)}
 	if q.Search != "" {
-		sql += `and name ~* $3`
+		sql += ` where p.name ~* $3`
 		args = append(args, q.Search)
 	}
-	sql += ` order by s desc limit $1 offset $2`
+	sql += ` order by p.skillrep desc limit $1 offset $2`
 	log.Println(sql)
 	log.Printf("%#v\n", args)
 	rows, err := db.Query(sql, args...)
@@ -69,12 +64,9 @@ func (q *SRQuery) Answer() SRResponse {
 		r.Error = err.Error()
 		return r
 	}
-	i := pageSize * q.Page
 	for rows.Next() {
 		var u RankedUser
-		i++
-		u.Rank = i
-		err = rows.Scan(&u.Id, &u.Upvotes, &u.Accepts, &u.Score, &u.Name, &u.Profile)
+		err = rows.Scan(&u.Id, &u.Rank, &u.Accepts, &u.SkillRep, &u.Name, &u.Profile)
 		die(err)
 		r.Users = append(r.Users, u)
 	}

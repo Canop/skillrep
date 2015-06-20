@@ -21,7 +21,7 @@ func (s *Saver) Run() {
 		if !more {
 			return
 		}
-		log.Printf("->Q:\"%.60s\"\n", q.Title)
+		// log.Printf("->Q:\"%.60s\"\n", q.Title)
 		tx, err := db.Begin()
 		die(err)
 		sql := "delete from Answer where question=$1"
@@ -34,22 +34,39 @@ func (s *Saver) Run() {
 		_, err = tx.Exec(sql, q.Id, q.Title, q.CreationDate, q.ClosedDate, q.Owner.Id, strings.Join(q.Tags, " "))
 		die(err)
 		for _, a := range q.Answers {
+			answerSkillRep := 0
+			if a.IsAccepted {
+				answerSkillRep += 15
+			}
+			if a.Score >= 10 {
+				answerSkillRep += 100
+			} else {
+				answerSkillRep += 10 * a.Score
+			}
+			if a.Owner.Id == q.Owner.Id {
+				answerSkillRep = 0
+			}
+			if q.ClosedDate != 0 {
+				answerSkillRep = 0
+			}
 			if a.Owner.Id != 0 {
-				sql = "update Player set Name=$1 where id=$2"
-				r, err := tx.Exec(sql, a.Owner.Name, a.Owner.Id)
+				sql = `update Player set Name=$1,
+					SkillRep=coalesce((select $3+sum(answer.SkillRep) from answer where owner=$2),0)
+					where Player.Id=$2`
+				r, err := tx.Exec(sql, a.Owner.Name, a.Owner.Id, answerSkillRep)
+				if err != nil {
+					log.Println(sql, a.Owner.Name, a.Owner.Id, answerSkillRep)
+				}
 				die(err)
 				n, _ := r.RowsAffected()
 				if n == 0 { // yes, there's no upsert yet
-					sql = "insert into Player(Id, Name, Profile) values($1,$2,$3)"
-					_, err = tx.Exec(sql, a.Owner.Id, a.Owner.Name, a.Owner.Profile)
+					sql = "insert into Player(Id, Name, Profile, SkillRep) values($1,$2,$3,$4)"
+					_, err = tx.Exec(sql, a.Owner.Id, a.Owner.Name, a.Owner.Profile, answerSkillRep)
 					die(err)
-					// log.Println("new player: ", a.Owner.Name)
-				} else {
-					// log.Println("Updated player: ", a.Owner.Name)
 				}
 			}
-			sql = "insert into Answer(Id, Owner, Question, CreationDate, Accepted, Score) values ($1,$2,$3,$4,$5,$6)"
-			_, err = tx.Exec(sql, a.Id, a.Owner.Id, q.Id, a.CreationDate, a.IsAccepted, a.Score)
+			sql = "insert into Answer(Id, Owner, Question, CreationDate, Accepted, Score, SkillRep) values ($1,$2,$3,$4,$5,$6,$7)"
+			_, err = tx.Exec(sql, a.Id, a.Owner.Id, q.Id, a.CreationDate, a.IsAccepted, a.Score, answerSkillRep)
 			die(err)
 		}
 		tx.Commit()

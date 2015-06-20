@@ -12,7 +12,7 @@ h1 {
 section {
 	width: 700px;
 	margin: auto;
-	margin-top: 10px;
+	margin-top: 15px;
 }
 section a {
 	text-decoration: none;
@@ -35,18 +35,16 @@ section > a + a::before {
 	cursor: pointer;
 }
 table {
-	/*background: white;
-	color: #333;*/
 	border-collapse: collapse;
 	width: 100%;
 }
 th {
-	border: 1px solid #333;
-	padding: 4px;
+	padding: 6px;
 	text-align: center;
+	border-bottom: thick solid #333;
 }
 td {
-	border: 1px solid #333;
+	/*border: 1px solid #333;*/
 	padding: 0 3px;
 	text-align: center;
 }
@@ -61,4 +59,16 @@ tr:nth-child(even), th {
 }
 #about {
 	display:none;
+}
+input[type="text"] {
+	padding: 2px 4px;
+	border: solid 1px #111;
+	transition: box-shadow 0.3s, border 0.3s;
+	background: #444;
+	color: #bbb;
+}
+input[type="text"]:focus,
+input[type="text"].focus {
+	border: solid 1px #444;
+	box-shadow: 0 0 2px 1px #969696;
 }

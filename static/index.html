@@ -15,9 +15,11 @@ An experiment in computing a skill focused reputation from StackOverflow data
 	<a href=http://dystroy.org/miaou/8>Discussions</a>
 </section>
 <section id=about>
+This project was inspired by the very interesting <a href=http://stackrating.com/>StackRating</a> but the approach here is different.
+<br>It 's mostly a filtering of the SO reputation to keep the gain that can most be related to some developer skill:
 <ul>
 	<li>  Question score is ignored
-	<li>  Only accepted answers are counted (might change, discussion welcome)
+	<li>  <s>Only accepted answers are counted</s> (might change, discussion welcome)
 	<li>  Self-answered questions are ignored
 	<li>  Closed questions are ignored
 	<li>  Score (upvotes minus downvotes) per answer is capped at 10
@@ -32,7 +34,7 @@ An experiment in computing a skill focused reputation from StackOverflow data
 </section>
 <section>
 	<div class=tbl-controls>
-		<input placeholder="username (regex possible)" id=search>
+		<input type=text placeholder="username (regex possible)" id=search>
 		<button class=tbl-first>⇤</button>
 		<button class=tbl-prev>←</button>
 		<button class=tbl-next>→</button>
@@ -42,7 +44,6 @@ An experiment in computing a skill focused reputation from StackOverflow data
 		<tr>
 			<th>Rank</th>
 			<th colspan=2>User</th>
-			<th>Capped Upvotes</th>
 			<th>Accepted Answers</th>
 			<th>Skill Rep</th>
 		</tr>

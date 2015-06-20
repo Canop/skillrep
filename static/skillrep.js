@@ -53,9 +53,8 @@
 				tr.append('td', u.Rank)
 				tr.append('td', '<img width=40px height=40px src="'+u.Profile+'">')
 				tr.append('td', u.Name)
-				tr.append('td', u.Upvotes)
 				tr.append('td', u.Accepts)
-				tr.append('td', u.Score)
+				tr.append('td', u.SkillRep)
 			})
 			$1('#nb-questions').textContent = resp.DBStats.NbQuestions
 			$1('#nb-answers').textContent = resp.DBStats.NbAnswers

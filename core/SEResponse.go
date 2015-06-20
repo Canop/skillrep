@@ -5,8 +5,10 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 )
 
 const apiurl = "http://api.stackexchange.com/2.2"
@@ -73,7 +75,7 @@ func GetQuestion(site string, id int) (*QuestionsSEResponse, error) {
 	return &r, err
 }
 
-func GetQuestions(site string, fromDate, toDate int64, page int) (*QuestionsSEResponse, error) {
+func GetQuestions(site string, fromDate, toDate int64, page int, possibleRetries int) (*QuestionsSEResponse, error) {
 	//filter := "!OfYUQYtgCaZ9JBeJyrvLd85AXer(WSNHQacu))0iZzl"
 	filter := "!OfYUNMJh9fuDMgvKdY4azSGUzEClDUc-_K.I(mDC4F3"
 	httpClient := new(http.Client)
@@ -88,14 +90,30 @@ func GetQuestions(site string, fromDate, toDate int64, page int) (*QuestionsSERe
 		url += fmt.Sprintf("&todate=%d", toDate)
 	}
 	log.Println("URL: " + url)
+	var bytes []byte
 	resp, err := httpClient.Get(url)
-	if err != nil {
-		return nil, err
+	if err == nil {
+		defer resp.Body.Close()
+		bytes, err = ioutil.ReadAll(resp.Body)
 	}
-	defer resp.Body.Close()
+	if err != nil {
+		log.Println("error in reading answer from SE", err)
+		if possibleRetries > 0 {
+			log.Println("Will try again in 3 minutes")
+			time.Sleep(time.Duration(3 * time.Minute))
+			return GetQuestions(site, fromDate, toDate, page, possibleRetries-1)
+		} else {
+			log.Fatal("no retry allowed")
+		}
+	}
 	var r QuestionsSEResponse
-	decoder := json.NewDecoder(bufio.NewReader(resp.Body))
-	err = decoder.Decode(&r)
+	// decoder := json.NewDecoder(bufio.NewReader(resp.Body))
+	// err = decoder.Decode(&r)
+	err = json.Unmarshal(bytes, &r)
+	if err != nil {
+		ioutil.WriteFile("se-response.dump", bytes, 0644)
+		log.Fatal("Error in Unmarshalling JSON, dumping file. ", err)
+	}
 	if r.ErrorMessage != "" {
 		log.Printf("ErrorMessage: %s\n", r.ErrorMessage)
 	}

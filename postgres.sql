@@ -12,12 +12,16 @@ create table Answer (
 	Question integer references Question(id),
 	CreationDate integer not null,
 	Accepted boolean not null,
-	Score integer not null
+	Score integer not null,
+	SkillRep integer not null,
 );
 create index answer_question on Answer(Question);
-create index answer_owner on Answer(Owner);
+create index answer_owner_accepted on Answer(Owner,Accepted);
 create table Player (
 	Id integer primary key,
 	Name text,
-	Profile text
+	Profile text,
+	SkillRep integer not null
 );
+create index player_skillrep on Player(SkillRep);
+
