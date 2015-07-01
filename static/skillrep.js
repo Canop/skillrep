@@ -38,6 +38,21 @@
 	}
 
 	var page = 0
+	function fetchDBStats(){
+		fetch('dbstats',{})
+		.then(function fillTbl(resp){
+			console.log('received', resp)
+			if (resp.Error) {
+				console.log("error:", resp.Error)
+				return
+			}
+			$1('#nb-questions').textContent = resp.DBStats.NbQuestions
+			$1('#nb-answers').textContent = resp.DBStats.NbAnswers
+			$1('#max-question-date').textContent = new Date(
+				resp.DBStats.MaxQuestionCreationDate*1000
+			)
+		})
+	}
 	function fetchUsersPage(){
 		fetch('users',{page:page, search:$1('#search').value})
 		.then(function fillTbl(resp){
@@ -53,14 +68,8 @@
 				tr.append('td', u.Rank)
 				tr.append('td', '<img width=40px height=40px src="'+u.Profile+'">')
 				tr.append('td', u.Name)
-				tr.append('td', u.Accepts)
 				tr.append('td', u.SkillRep)
 			})
-			$1('#nb-questions').textContent = resp.DBStats.NbQuestions
-			$1('#nb-answers').textContent = resp.DBStats.NbAnswers
-			$1('#max-question-date').textContent = new Date(
-				resp.DBStats.MaxQuestionCreationDate*1000
-			)
 		})
 	}
 
@@ -89,7 +98,12 @@
 	var aboutDisplayed = false;
 	$('#about-opener').on('click', function(){
 		var about = $1('#about')
-		about.style.display = about.style.display!=='block'?'block':'none'
+		if (about.style.display!=='block') {
+			about.style.display = 'block'
+			fetchDBStats()
+		} else {
+			about.style.display = 'none'
+		}
 	});
 
 }()

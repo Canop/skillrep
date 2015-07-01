@@ -26,11 +26,17 @@ This project was inspired by the very interesting <a href=http://stackrating.com
 	<li>  Skill Rep per answer is 10*score plus 15 when accepted
 	<li>  There's no daily reputation cap
 	<li>  Bounties are ignored
-	<li>  Votes coming more than one week after the question creation might be ignored
+	<li>  Votes coming more than one week after the question creation may be ignored
 </ul>
-<br>Questions in database: <span id=nb-questions></span>
-<br>Answers in database: <span id=nb-answers></span>
-<br>Database complete until: <span id=max-question-date></span>
+<p>
+In the future I might also ponder the value of the votes (currently 10) using the skill rep the asker won (questions asked by good answerers seem to be better overall).
+</p>
+<p>
+I would also have loved to ponder using the skill rep of the voters but unfortunately (for me) the API keep this data secret.
+</p>
+<br>Questions in database: <span id=nb-questions>counting...</span>
+<br>Answers in database: <span id=nb-answers>counting...</span>
+<br>Database complete until: <span id=max-question-date>counting...</span>
 </section>
 <section>
 	<div class=tbl-controls>
@@ -44,7 +50,6 @@ This project was inspired by the very interesting <a href=http://stackrating.com
 		<tr>
 			<th>Rank</th>
 			<th colspan=2>User</th>
-			<th>Accepted Answers</th>
 			<th>Skill Rep</th>
 		</tr>
 	</thead>
