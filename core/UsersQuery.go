@@ -65,8 +65,10 @@ func (q *UsersQuery) Answer() UsersResponse {
 			p.skillrep,
 			p.name,
 			p.profile
-			from player p where p.name ~* $3
-			order by p.skillrep desc limit $1 offset $2`
+			from (
+				select id, skillrep, name, profile from player where name ~* $3
+				order by skillrep desc limit $1 offset $2
+			) p`
 		rows, err := db.TimedQuery(sql, pageSize, (q.Page * pageSize), q.Search)
 		if err != nil {
 			r.Error = err.Error()

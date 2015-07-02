@@ -16,7 +16,7 @@ An experiment in computing a skill focused reputation from StackOverflow data
 </section>
 <section id=about>
 This project was inspired by the very interesting <a href=http://stackrating.com/>StackRating</a> but the approach here is different.
-<br>It 's mostly a filtering of the SO reputation to keep the gain that can most be related to some developer skill:
+<br>It 's mostly a filtering of the SO reputation to keep the gain that can most be related to some developer skill and reduce the noise added by highly popular questions:
 <ul>
 	<li>  Question score is ignored
 	<li>  <s>Only accepted answers are counted</s> (might change, discussion welcome)
@@ -40,7 +40,9 @@ I would also have loved to ponder using the skill rep of the voters but unfortun
 </section>
 <section>
 	<div class=tbl-controls>
+		<span id=wait>Searching...</span>
 		<input type=text placeholder="username (regex possible)" id=search>
+		<button id=username-clear>X</button>
 		<button class=tbl-first>⇤</button>
 		<button class=tbl-prev>←</button>
 		<button class=tbl-next>→</button>

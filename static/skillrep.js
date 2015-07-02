@@ -38,6 +38,9 @@
 	}
 
 	var page = 0
+	function commated(n){
+		return (''+n).replace(/(^\d{1,3}|\d{3})(?=(?:\d{3})+(?:$|\.))/g, '$1,')
+	}
 	function fetchDBStats(){
 		fetch('dbstats',{})
 		.then(function fillTbl(resp){
@@ -46,17 +49,22 @@
 				console.log("error:", resp.Error)
 				return
 			}
-			$1('#nb-questions').textContent = resp.DBStats.NbQuestions
-			$1('#nb-answers').textContent = resp.DBStats.NbAnswers
+			$1('#nb-questions').textContent = commated(resp.DBStats.NbQuestions)
+			$1('#nb-answers').textContent = commated(resp.DBStats.NbAnswers)
 			$1('#max-question-date').textContent = new Date(
 				resp.DBStats.MaxQuestionCreationDate*1000
 			)
 		})
 	}
-	function fetchUsersPage(){
-		fetch('users',{page:page, search:$1('#search').value})
+	var currentQuery, postponedQuery
+	function fetchQuery(q){
+		currentQuery = q
+		$1('#wait').className='on';
+		fetch('users', q)
 		.then(function fillTbl(resp){
+			$1('#wait').className='off';
 			console.log('received', resp)
+			currentQuery = null
 			if (resp.Error) {
 				console.log("error:", resp.Error)
 				return
@@ -70,7 +78,20 @@
 				tr.append('td', u.Name)
 				tr.append('td', u.SkillRep)
 			})
+			if (postponedQuery) {
+				fetchQuery(postponedQuery)
+				postponedQuery = null
+			}
 		})
+	}
+	function fetchUsersPage(){
+		query = {page:page, search:$1('#search').value}
+		if (currentQuery) {
+			console.log('one at a time, sorry') // search is too slow...
+			postponedQuery = query
+			return
+		}
+		fetchQuery(query)
 	}
 
 	fetchUsersPage()
@@ -86,16 +107,27 @@
 		page++
 		fetchUsersPage()
 	})
+	$1('#username-clear').style.visibility = 'hidden'
+	$('#username-clear').on('click', function(){
+		$1('#search').value = ''
+		page = 0
+		this.style.visibility = 'hidden'
+		fetchUsersPage()
+	})
+	var keyTimer
 	$('#search').on('keyup', function(){
 		this.className = this.className.replace(/\binvalid\b/,'')
+		page = 0
+		$1('#username-clear').style.visibility = this.value ? 'visible' : 'hidden'
 		try {
 			new RegExp(this.value)
-			fetchUsersPage()
+			clearTimeout(keyTimer)
+			keyTimer = setTimeout(fetchUsersPage, 500)
 		} catch(e) {
 			this.className += ' invalid'
 		}
-	});
-	var aboutDisplayed = false;
+	})
+	var aboutDisplayed = false
 	$('#about-opener').on('click', function(){
 		var about = $1('#about')
 		if (about.style.display!=='block') {
@@ -104,6 +136,6 @@
 		} else {
 			about.style.display = 'none'
 		}
-	});
+	})
 
 }()

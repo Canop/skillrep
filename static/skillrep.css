@@ -72,3 +72,13 @@ input[type="text"].focus {
 	border: solid 1px #444;
 	box-shadow: 0 0 2px 1px #969696;
 }
+#wait {
+	color: #ffd700;
+	opacity: 0;
+	margin-right: 40px;
+}
+#wait.on {
+	opacity: 1;
+	transition: opacity .3s .3s;
+}
+
