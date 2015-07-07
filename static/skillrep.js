@@ -20,7 +20,14 @@
 		})
 	}
 	HTMLElement.prototype.append = function(tag,text){
-		var e = document.createElement(tag)
+		var e
+		if (/^</.test(tag)) {
+			e = document.createElement('div')
+			e.innerHTML = tag
+			e = e.firstChild
+		} else {
+			e = document.createElement(tag)
+		}
 		if (text) e.innerHTML = text
 		return this.appendChild(e)
 	}
@@ -32,7 +39,7 @@
 	NodeList.prototype.__proto__ = Array.prototype
 	NodeList.prototype.on = function(type,f){
 		this.forEach(function(n){
-			n.addEventListener(type, f)
+			n.addEventListener(type, f, true)
 		})
 		return this
 	}
@@ -49,20 +56,20 @@
 				console.log("error:", resp.Error)
 				return
 			}
-			$1('#nb-questions').textContent = commated(resp.DBStats.NbQuestions)
-			$1('#nb-answers').textContent = commated(resp.DBStats.NbAnswers)
+			$1('#nb-questions').textContent = "about " + resp.DBStats.NbQuestions
+			$1('#nb-answers').textContent = "about " + resp.DBStats.NbAnswers
 			$1('#max-question-date').textContent = new Date(
 				resp.DBStats.MaxQuestionCreationDate*1000
-			)
+			).toString().replace(/:[^:]*$/,'')
 		})
 	}
 	var currentQuery, postponedQuery
 	function fetchQuery(q){
 		currentQuery = q
-		$1('#wait').className='on';
+		$1('#wait').className='on'
 		fetch('users', q)
 		.then(function fillTbl(resp){
-			$1('#wait').className='off';
+			$1('#wait').className='off'
 			console.log('received', resp)
 			currentQuery = null
 			if (resp.Error) {
@@ -77,6 +84,9 @@
 				tr.append('td', '<img width=40px height=40px src="'+u.Profile+'">')
 				tr.append('td', u.Name)
 				tr.append('td', u.SkillRep)
+				tr.onclick = function(){
+					showUser(u)
+				}
 			})
 			if (postponedQuery) {
 				fetchQuery(postponedQuery)
@@ -93,6 +103,28 @@
 		}
 		fetchQuery(query)
 	}
+	function hideUser(){
+		var $u = $1('#user-wrapper')
+		if ($u) $u.remove()
+	}
+	function showUser(u){
+		hideUser()
+		var $uw = $1("body").append('div')
+		$uw.id = "user-wrapper"
+		var $u = $uw.append('div')
+		$u.id = "user"
+		$u.append('h1', u.Name)
+		$u.append('<img src="'+u.Profile+'">')
+		$u.append('div', '<span>Rank:</span>').append('<span id=user-rank>', u.Rank)
+		$u.append('div', '<span>Skill Rep:</span>').append('<span id=user-skill-rep>', u.SkillRep)
+		$u.append('div', '<span>Accepted Answers:</span>').append('<span id=user-accepts>counting...')
+		$u.append('div', '<a href=https://stackoverflow.com/users/'+u.Id+'>Stack Overflow Profile</a>')
+		fetch("users/"+u.Id)
+		.then(function(ur){
+			$1('#user-accepts').innerHTML = ur.User.Accepts
+		})
+	}
+	$('body').on('click', hideUser).on('keyup', hideUser)
 
 	fetchUsersPage()
 	$('.tbl-first').on('click', function(){
@@ -131,6 +163,7 @@
 	$('#about-opener').on('click', function(){
 		var about = $1('#about')
 		if (about.style.display!=='block') {
+			this.title = "click again to close"
 			about.style.display = 'block'
 			fetchDBStats()
 		} else {

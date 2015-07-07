@@ -14,12 +14,12 @@ section {
 	margin: auto;
 	margin-top: 15px;
 }
-section a {
+a {
 	text-decoration: none;
 	color: #bbd;
 	cursor: pointer;
 }
-section a:hover {
+a:hover {
 	color: #ddf;
 }
 section > a + a::before {
@@ -37,6 +37,9 @@ section > a + a::before {
 table {
 	border-collapse: collapse;
 	width: 100%;
+}
+#users tbody tr {
+	cursor: pointer;
 }
 th {
 	padding: 6px;
@@ -81,4 +84,35 @@ input[type="text"].focus {
 	opacity: 1;
 	transition: opacity .3s .3s;
 }
-
+#user-wrapper {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+#user {
+	background: #444;
+	padding: 50px;
+}
+#user > div {
+	margin: 10px;
+}
+#user img {
+	float: left;
+	margin: 10px 10px 0 0;
+}
+#user span {
+	opacity: .8;
+	margin: 0 5px;
+}
+#user span[id] {
+	opacity: 1;
+}
+#user a {
+	margin: 0 5px;
+}
