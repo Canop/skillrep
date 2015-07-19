@@ -25,6 +25,7 @@ func handleJsonDBStatsQuery(w http.ResponseWriter, r *http.Request) {
 //           /users/123456
 func handleJsonUsersQuery(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "public, max-age=120") // 2 minutes
 	srq := &core.UsersQuery{}
 	srq.Page, _ = strconv.Atoi(r.FormValue("page"))
 	srq.Search = r.FormValue("search")
@@ -37,8 +38,10 @@ func handleJsonUsersQuery(w http.ResponseWriter, r *http.Request) {
 var userRequestRegex = regexp.MustCompile(`/(\d+)$`)
 
 func handleJsonUserQuery(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Path:", r.URL.Path)
+	fmt.Println("User Query - Path:", r.URL.Path)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "public, max-age=120") // 2 minutes
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	m := userRequestRegex.FindStringSubmatch(r.URL.Path)
 	if len(m) < 1 {
 		http.Error(w, "no user id found in path", 400)
