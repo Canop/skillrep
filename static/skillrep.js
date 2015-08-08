@@ -77,18 +77,20 @@
 				console.log("error:", resp.Error)
 				return
 			}
-			var tbody = $1("#users tbody")
-			tbody.empty()
-			resp.Users.forEach(function(u){
-				var tr = tbody.append('tr')
-				tr.append('td', u.Rank)
-				tr.append('td', '<img width=40px height=40px src="'+u.Profile+'">')
-				tr.append('td', u.Name)
-				tr.append('td', commated(u.SkillRep))
-				tr.onclick = function(){
-					showUser(u)
-				}
-			})
+			if (resp.Users) {
+				var tbody = $1("#users tbody")
+				tbody.empty()
+				resp.Users.forEach(function(u){
+					var tr = tbody.append('tr')
+					tr.append('td', u.Rank)
+					tr.append('td', '<img width=40px height=40px src="'+u.Profile+'">')
+					tr.append('td', u.Name)
+					tr.append('td', commated(u.SkillRep))
+					tr.onclick = function(){
+						showUser(u)
+					}
+				})
+			}
 			if (postponedQuery) {
 				fetchQuery(postponedQuery)
 				postponedQuery = null
@@ -120,7 +122,7 @@
 		$u.append('div', '<span>Skill Rep:</span>').append('<span id=user-skill-rep>', commated(u.SkillRep))
 		$u.append('div', '<span>Accepted Answers:</span>').append('<span id=user-accepts>counting...')
 		$u.append('div', '<a href=https://stackoverflow.com/users/'+u.Id+'>Stack Overflow Profile</a>')
-		fetch("users/"+u.Id)
+		fetch("users/"+u.Id+"?accepts=true")
 		.then(function(ur){
 			$1('#user-accepts').innerHTML = commated(ur.User.Accepts)
 		})
@@ -160,15 +162,28 @@
 			this.className += ' invalid'
 		}
 	})
-	var aboutDisplayed = false
-	$('#about-opener').on('click', function(){
-		var about = $1('#about')
-		if (about.style.display!=='block') {
-			about.style.display = 'block'
-			fetchDBStats()
-		} else {
-			about.style.display = 'none'
-		}
+	var uidmatch = location.search.match(/(?:\?|&)user=(\d+)(?:$|&)/)
+	if (uidmatch) {
+		fetch("users/"+uidmatch[1])
+		.then(function(ur){
+			if (ur.Error || !ur.User.Name) {
+				console.log("bad user", ur)
+				return
+			}
+			showUser(ur.User)
+		})
+	}
+	$('.tab').on('click', function(){
+		var selected = /selected/.test(this.className)
+		$('.tab').forEach(function(tab){
+			tab.className =  'tab'
+		})
+		$('.tab-page').forEach(function(page){
+			page.className = 'tab-page'
+		})
+		if (selected) return
+		this.className = 'tab selected'
+		if (this.dataset.page==='about') fetchDBStats()
+		document.getElementById(this.dataset.page).className = 'tab-page selected'
 	})
-
 }()

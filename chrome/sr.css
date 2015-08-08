@@ -1,0 +1,30 @@
+.user-info {
+	position: relative;
+}
+.skillrep-user {
+	display: block;
+	position: absolute;
+	background: rgba(10,10,10,.8);
+	color: #eee;
+	z-index: 5;
+	right: -35px;
+	top: -1px;
+	padding: 4px;
+}
+.skillrep-title {
+	opacity: .8;
+	text-align: center;
+	font-size: 90%;
+}
+.skillrep-rank::before {
+	opacity: .6;
+	content: "rank:";
+	margin-right: 2px;
+	font-size: 90%;
+}
+.skillrep-rep::before {
+	opacity: .6;
+	content: " rep:";
+	margin-right: 2px;
+	font-size: 90%;
+}

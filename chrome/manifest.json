@@ -1,0 +1,20 @@
+{
+	"manifest_version": 2,
+	"name": "SkillRep",
+	"description": "Skill Rep in Stack Overflow",
+	"version": "0.1",
+	"icons": {
+		"128":"chromoso-icon-big.png"
+	},
+	"content_scripts": [
+		{
+			"matches": ["*://*.stackoverflow.com/*"],
+			"all_frames" : true,
+			"run_at" : "document_end",
+			"js": [
+				"sr.js"
+			],
+			"css": [ "sr.css" ]
+		}
+	]
+}

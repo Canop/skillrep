@@ -12,7 +12,7 @@ h1 {
 section {
 	width: 700px;
 	margin: auto;
-	margin-top: 15px;
+	margin-top: 20px;
 }
 a {
 	text-decoration: none;
@@ -60,8 +60,27 @@ tr:nth-child(even), th {
 .invalid {
 	color: #c00;
 }
-#about {
+.tabs {
+	margin-bottom: -5px;
+	padding-left: 0;
+}
+.tab {
+	cursor: pointer;
+	padding: 10px 10px 15px 10px;
+}
+.tab:hover {
+	background: #333;
+}
+.tab.selected, .tab.selected:hover {
+	background: #111;
+}
+.tab-page {
 	display:none;
+	background: #111;
+	padding: 20px;
+}
+.tab-page.selected {
+	display: block;
 }
 input[type="text"] {
 	padding: 2px 4px;

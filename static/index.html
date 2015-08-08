@@ -9,12 +9,13 @@
 <section>
 An experiment in computing a skill focused reputation from StackOverflow data
 </section>
-<section>
-	<a id=about-opener>About</a>
-	<a href=https://github.com/Canop/skillrep>GitHub</a>
-	<a href=http://dystroy.org/miaou/8>Discussions</a>
+<section class=tabs>
+	<span class=tab data-page=about>About</span>
+	<span class=tab data-page=extension>Extension Chrome</span>
+	<span class=tab data-page=source>GitHub</span>
+	<span class=tab data-page=discussion>Discussions</span>
 </section>
-<section id=about>
+<section class=tab-page id=about>
 This project was inspired by the very interesting <a href=http://stackrating.com/>StackRating</a> but the approach here is different.
 <br>It 's mostly a filtering of the SO reputation to keep the gain that can most be related to some developer skill and reduce the noise added by highly popular questions:
 <ul>
@@ -32,12 +33,23 @@ This project was inspired by the very interesting <a href=http://stackrating.com
 In the future I might also ponder the value of the votes (currently 10) using the skill rep the asker won (questions asked by good answerers seem to be better overall).
 </p>
 <p>
-I would also have loved to ponder using the skill rep of the voters but unfortunately (for me) the API keep this data secret.
+I would also have loved to ponder using the skill rep of the voters but the API keeps this data secret.
 </p>
 <br>Users in database: <span id=nb-players>counting...</span>
 <br>Questions in database: <span id=nb-questions>counting...</span>
 <br>Answers in database: <span id=nb-answers>counting...</span>
 <br>Database complete until: <span id=max-question-date>counting...</span>
+</section>
+<section class=tab-page id=extension>
+The companion for the SkillRep web site is the <a href=https://chrome.google.com/webstore/detail/skillrep/mgacjhnogpfhjfdkbdpckjnlclgenblp>SkillRep Chrome extension</a>.
+<br>It displays the rank and rep of every user next to his name.
+</section>
+<section class=tab-page id=source>
+Code source is on <a href=https://github.com/Canop/skillrep>GitHub</a>.
+</section>
+<section class=tab-page id=discussion>
+The best place to discuss SkillRep is on the Miaou chat.
+<a href=http://dystroy.org/miaou/8>Come in</a> and ping <i>@dystroy</i>.
 </section>
 <section>
 	<div class=tbl-controls>

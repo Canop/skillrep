@@ -6,7 +6,8 @@ import (
 )
 
 type UserQuery struct {
-	UserId int
+	UserId       int
+	QueryAccepts bool // querying accepts is very heavy, so it's optionnal
 }
 type UserResponse struct {
 	User  RankedUser
@@ -18,9 +19,13 @@ func (q *UserQuery) Answer() UserResponse {
 	var u RankedUser
 	sql := `select 
 		p.id,
-		(select 1 + count(*) from player op where op.skillrep>p.skillrep),
-		(select count(*) from answer where owner=$1 and accepted is true),
-		p.skillrep,
+		(select 1 + count(*) from player op where op.skillrep>p.skillrep),`
+	if q.QueryAccepts {
+		sql += "(select count(*) from answer where owner=$1 and accepted is true),"
+	} else {
+		sql += " -1,"
+	}
+	sql += `p.skillrep,
 		p.name,
 		p.profile
 		from player p where id=$1`

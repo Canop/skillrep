@@ -22,7 +22,6 @@ func handleJsonDBStatsQuery(w http.ResponseWriter, r *http.Request) {
 
 // url with paths:
 //           /users
-//           /users/123456
 func handleJsonUsersQuery(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Cache-Control", "public, max-age=120") // 2 minutes
@@ -37,6 +36,9 @@ func handleJsonUsersQuery(w http.ResponseWriter, r *http.Request) {
 
 var userRequestRegex = regexp.MustCompile(`/(\d+)$`)
 
+// url with paths:
+//           /users/123456
+//           /users/123456?accepts=true
 func handleJsonUserQuery(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("User Query - Path:", r.URL.Path)
 	w.Header().Set("Content-Type", "application/json")
@@ -49,6 +51,8 @@ func handleJsonUserQuery(w http.ResponseWriter, r *http.Request) {
 	}
 	uq := &core.UserQuery{}
 	uq.UserId, _ = strconv.Atoi(m[1])
+	queryAccepts := r.FormValue("accepts")
+	uq.QueryAccepts = queryAccepts == "true"
 	ur := uq.Answer()
 	b, _ := json.Marshal(ur)
 	w.Write(b)
