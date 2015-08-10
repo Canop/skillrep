@@ -1,24 +1,29 @@
 
 // things
 
+function commated(n){
+	return (''+n).replace(/(^\d{1,3}|\d{3})(?=(?:\d{3})+(?:$|\.))/g, '$1,')
+}
+
 function enrichUserInfo(parentNode){
-	parentNode.querySelectorAll(".user-info").forEach(function(ui){
+	parentNode.querySelectorAll(".post-signature").forEach(function(ui){
 		console.log("user-info:", ui.innerHTML)
-		var userLink = ui.querySelector(".user-details a")
+		var userLink = ui.querySelector(".user-info .user-details a")
 		if (!userLink) return
 		var userId = userLink.href.match(/\/users\/(\d+)/)[1]
 		console.log("UID:",userId)
 		fetch("https://dystroy.org/skillrep/users/"+userId).then(function(data){
 			console.log("received:", data)
+			ui.style.border = "2px solid #444"
 			var srbox = ui.append('a')
 			srbox.className = 'skillrep-user'
 			srbox.href = 'https://dystroy.org/skillrep/?user='+userId
 			srbox.target = "_blank"
 			srbox.append('<div class=skillrep-title>', "SkillRep")
 			if (data.User.Rank) {
-				srbox.append('<div class=skillrep-rank>', data.User.Rank)
+				srbox.append('<div class=skillrep-rank>', commated(data.User.Rank))
 			}
-			srbox.append('<div class=skillrep-rep>', data.User.SkillRep||'0')
+			srbox.append('<div class=skillrep-rep>', commated(data.User.SkillRep||0))
 		})
 	})
 

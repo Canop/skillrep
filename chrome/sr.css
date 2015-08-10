@@ -1,26 +1,39 @@
-.user-info {
+.post-signature {
 	position: relative;
 }
 .skillrep-user {
-	display: block;
+	display: flex;
 	position: absolute;
-	background: rgba(10,10,10,.8);
-	color: #eee;
+	background: #444;
+	color: #fb0;
 	z-index: 5;
-	right: -35px;
-	top: -1px;
+	top: 100%;
+	left: -2px;
+	right: -2px;
 	padding: 4px;
+	flex-wrap: wrap;
+	border-radius: 0 0 8px 8px;
 }
 .skillrep-title {
 	opacity: .8;
 	text-align: center;
 	font-size: 90%;
+	width: 100%;
+}
+.skillrep-rank {
+	width: 45%;
+	font-size: 105%;
+	text-align: center;
 }
 .skillrep-rank::before {
 	opacity: .6;
-	content: "rank:";
+	content: "#";
 	margin-right: 2px;
 	font-size: 90%;
+}
+.skillrep-rep {
+	width: 50%;
+	text-align: center;
 }
 .skillrep-rep::before {
 	opacity: .6;

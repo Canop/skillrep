@@ -1,7 +1,7 @@
 body {
 	font-family: Tahoma, Geneva, sans-serif;
 	font-size: 14px;
-	background: #222;
+	background: #1a1a1a;
 	color: #aaa
 }
 h1 {
@@ -16,11 +16,11 @@ section {
 }
 a {
 	text-decoration: none;
-	color: #bbd;
+	color: #fb0;
 	cursor: pointer;
 }
 a:hover {
-	color: #ddf;
+	color: #f80;
 }
 section > a + a::before {
 	content:"-";

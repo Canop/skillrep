@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "SkillRep",
 	"description": "Skill Rep in Stack Overflow",
-	"version": "0.1",
+	"version": "0.4",
 	"icons": {
 		"128":"chromoso-icon-big.png"
 	},
